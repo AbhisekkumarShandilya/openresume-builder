@@ -1,10 +1,51 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('node:path');
 const fs = require('node:fs/promises');
 
 const isDev = process.env.NODE_ENV === 'development';
 
 let win;
+
+// Ask before downloading/installing — these builds are unsigned, so the
+// user should consent rather than have an installer silently fetched.
+autoUpdater.autoDownload = false;
+autoUpdater.autoInstallOnAppQuit = false;
+
+autoUpdater.on('update-available', async (info) => {
+  const { response } = await dialog.showMessageBox(win, {
+    type: 'info',
+    title: 'Update available',
+    message: `OpenResume Builder ${info.version} is available (you have ${app.getVersion()}).`,
+    detail: 'Download it now?',
+    buttons: ['Download', 'Later'],
+    defaultId: 0,
+    cancelId: 1,
+  });
+  if (response === 0) autoUpdater.downloadUpdate();
+});
+
+autoUpdater.on('update-downloaded', async () => {
+  const { response } = await dialog.showMessageBox(win, {
+    type: 'info',
+    title: 'Update ready',
+    message: 'The update has been downloaded.',
+    detail: 'Restart now to install it?',
+    buttons: ['Restart', 'Later'],
+    defaultId: 0,
+    cancelId: 1,
+  });
+  if (response === 0) autoUpdater.quitAndInstall();
+});
+
+autoUpdater.on('error', (err) => {
+  console.error('Auto-update check failed:', err);
+});
+
+function checkForUpdates() {
+  if (isDev || !app.isPackaged) return;
+  autoUpdater.checkForUpdates().catch((err) => console.error('checkForUpdates failed:', err));
+}
 
 function createWindow() {
   win = new BrowserWindow({
@@ -68,7 +109,10 @@ ipcMain.handle('export-pdf', async () => {
   return { ok: true, filePath };
 });
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+  checkForUpdates();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
