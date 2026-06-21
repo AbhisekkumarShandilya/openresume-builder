@@ -32,3 +32,9 @@
 - [ ] Automated tests (component tests for Editor/Preview, at minimum)
 - [ ] CI workflow for Windows builds + lint on push (mac and Linux build CI already exist)
 - [ ] Internationalization (i18n) for multi-language resumes
+
+## Distribution
+- [ ] Winget (command-line install on Windows) — manifest PR in progress
+- [ ] Chocolatey — needs a chocolatey.org account + API key to push the package, stricter moderation than winget
+- [ ] Snap Store (command-line install on Linux, `snap install`)
+- [ ] Keep the winget manifest's version/hash updated on every future release
