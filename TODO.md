@@ -34,7 +34,9 @@
 - [ ] Internationalization (i18n) for multi-language resumes
 
 ## Distribution
-- [ ] Winget (command-line install on Windows) — manifest PR in progress
+- [x] Winget manifest submitted: https://github.com/microsoft/winget-pkgs/pull/391215
+- [ ] `winget install` from the local manifest currently fails on a generic internal error during winget's own pre-install Mark-of-the-Web step (not our installer — that was verified working directly, `/S` exits 0 and registers correctly). Most likely caused by zero SmartScreen reputation on an unsigned binary; revisit if it still fails once the file has been out for a while, or once code-signed
+- [ ] Code-signing certificate would likely fix the SmartScreen/MOTW issue above, and removes the "unidentified developer" warnings on Windows generally — costs money, lower priority for a free hobby project
 - [ ] Chocolatey — needs a chocolatey.org account + API key to push the package, stricter moderation than winget
 - [ ] Snap Store (command-line install on Linux, `snap install`)
 - [ ] Keep the winget manifest's version/hash updated on every future release
