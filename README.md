@@ -1,70 +1,36 @@
 # OpenResume Builder
 
-Open-source, cross-platform (Windows / macOS / Linux) resume builder built with **Electron + React + Vite**. Edit on the left, see a live A4 preview on the right, save/load as JSON, and export to PDF. An AI hook is stubbed out for later.
+A free, open-source, cross-platform resume builder built with **Electron + React + Vite**.
 
-## Prerequisites
+![OpenResume Builder screenshot](docs/screenshot.png)
 
-Install **Node.js** (LTS, v18 or newer) from https://nodejs.org. This gives you `node` and `npm`.
+## Features
 
-Check it's installed:
+- **Live A4 preview** — edit on the left, see a formatted resume on the right as you type
+- **Two templates** — Classic and Modern, switchable instantly
+- **Editable sections** — personal info, work experience, education, and skills
+- **Save / Open as JSON** — keep multiple resume files and reopen them anytime
+- **Export to PDF** — one click, ready to send to employers
+- **Autosave** — your edits persist automatically across app restarts, no extra clicks
+- **AI Improve button** — stubbed in for an upcoming AI-assisted rewrite feature
 
-```bash
-node -v
-npm -v
-```
+## Download
 
-On Windows, also have **Git** (optional, for version control) and a code editor like **VS Code**.
+Get the latest build from the [Releases page](https://github.com/AbhisekkumarShandilya/openresume-builder/releases/latest):
 
-## Setup
+- **Windows** — installer (`Setup.exe`) or portable (`.exe`), `.7z` versions also available
+- **macOS** — `.dmg` for Apple Silicon or Intel (built via CI, currently untested on real Mac hardware)
+- **Linux** — AppImage target is configured but not yet built/published; see [DEVELOPMENT.md](DEVELOPMENT.md) to build it yourself for now
 
-```bash
-npm install
-```
+These are unsigned builds, so Windows SmartScreen / macOS Gatekeeper will warn about an unidentified developer the first time you run one.
 
-## Run in development (hot reload)
+## Roadmap
 
-```bash
-npm run dev
-```
+See [TODO.md](TODO.md) for planned work (UI polish, more sections, full AI integration, Android build).
 
-This starts Vite and opens the Electron app pointing at it. Edits to React files refresh live.
+## Contributing / running from source
 
-## Run the production build locally
-
-```bash
-npm start
-```
-
-## Package installers (.exe / .dmg / AppImage)
-
-```bash
-npm run dist
-```
-
-Output lands in the `release/` folder. On Windows you'll get an installer `.exe`.
-
-## Project structure
-
-```
-electron/
-  main.cjs      Electron main process — window, file save/load, PDF export
-  preload.cjs   Safe bridge between UI and file system
-src/
-  main.jsx      React entry
-  App.jsx       Layout, toolbar, state
-  Editor.jsx    Left-side form
-  Preview.jsx   Right-side live resume render (2 templates)
-  data.js       The resume JSON model
-  ai.js         AI stub — fill in later
-  styles.css    All styling + print rules
-```
-
-## Adding AI later
-
-See the comments in `src/ai.js`. The key rule: do the actual API call in
-`electron/main.cjs` (the main process) so your API key is never exposed in the
-UI. Expose it through `preload.cjs` the same way save/load/export work, then
-call it from `ai.js`.
+See [DEVELOPMENT.md](DEVELOPMENT.md) for setup, running in dev mode, and building installers yourself.
 
 ## License
 

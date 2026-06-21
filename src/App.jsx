@@ -52,7 +52,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="toolbar">
-        <strong>Resume Builder</strong>
+        <strong>OpenResume Builder</strong>
         <div className="spacer" />
         <select value={template} onChange={(e) => setTemplate(e.target.value)}>
           <option value="classic">Classic</option>
