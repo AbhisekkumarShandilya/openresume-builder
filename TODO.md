@@ -2,17 +2,17 @@
 
 ## UI
 - [ ] Improve overall visual design (spacing, typography, colors)
-- [ ] Add more resume templates beyond Classic/Modern
+- [x] Add more resume templates beyond Classic/Modern (Resumatic added, with a template gallery picker)
 - [ ] Dark mode
-- [ ] Drag-and-drop reordering of experience/education entries
-- [ ] Visual "saved" indicator for autosave
+- [x] Reordering of experience/education/etc. entries (▲▼ controls, not drag-and-drop)
+- [x] Visual "saved" indicator for autosave
 
 ## Functionality
-- [ ] Increase functionality: add sections for projects, certifications, languages, links
-- [ ] Multiple saved resumes / profile switching (not just single autosave slot)
+- [x] Increase functionality: add sections for projects, certifications, custom — still missing dedicated languages/links fields
+- [ ] Multiple saved resumes / profile switching (snapshots now cover backup/restore, but not distinct named profiles)
 - [ ] Export to DOCX and plain text, not just PDF
 - [ ] Spell-check / grammar check on text fields
-- [ ] Undo/redo for edits
+- [ ] Undo/redo for edits (snapshots are a coarser-grained alternative)
 
 ## AI Integration
 - [ ] Implement the AI integration feature (currently stubbed in `src/ai.js`)

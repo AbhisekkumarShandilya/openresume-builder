@@ -1,12 +1,18 @@
 * { box-sizing: border-box; }
-body, html, #root { margin: 0; height: 100%; font-family: system-ui, sans-serif; }
+body, html, #root { margin: 0; height: 100%; overflow-x: hidden; font-family: system-ui, sans-serif; }
 
 .app { display: flex; flex-direction: column; height: 100vh; }
 
-.toolbar {
-  display: flex; align-items: center; gap: 8px;
-  padding: 10px 14px; background: #1f2937; color: #fff;
+.toolbar { display: flex; flex-direction: column; background: #1f2937; color: #fff; }
+.toolbar-row { display: flex; align-items: center; gap: 8px; padding: 10px 14px; }
+.toolbar-row-tabs { position: relative; border-bottom: 1px solid #111827; }
+.toolbar-row-tabs .tabs-group {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+  display: flex; align-items: center; gap: 4px;
+  background: #111827; padding: 4px; border-radius: 8px;
 }
+.tabs-group button { background: transparent; }
+.tabs-group button:hover { background: #374151; }
 .toolbar .spacer { flex: 1; }
 .toolbar button, .toolbar select {
   padding: 6px 10px; border: 0; border-radius: 6px;
@@ -26,6 +32,11 @@ body, html, #root { margin: 0; height: 100%; font-family: system-ui, sans-serif;
 .save-status.saving::before { background: #f59e0b; }
 
 .toolbar-group { position: relative; display: flex; gap: 8px; }
+
+.tabs { display: flex; gap: 4px; }
+.tabs button { padding: 6px 14px; }
+.tabs button.active { background: #2563eb; color: #fff; }
+.tabs button.active:hover { background: #2563eb; }
 
 .popover {
   position: absolute; top: 38px; left: 0; z-index: 50; width: 260px;
@@ -58,7 +69,7 @@ body, html, #root { margin: 0; height: 100%; font-family: system-ui, sans-serif;
 .workspace { display: flex; flex: 1; overflow: hidden; }
 
 .nav-pane {
-  width: 170px; flex-shrink: 0; overflow-y: auto; padding: 12px 8px;
+  width: 170px; flex-shrink: 0; overflow-y: auto; overflow-x: hidden; padding: 12px 8px;
   background: #111827; display: flex; flex-direction: column; gap: 4px;
 }
 .nav-pane .nav-item {
@@ -83,8 +94,28 @@ body, html, #root { margin: 0; height: 100%; font-family: system-ui, sans-serif;
   background: #1f2937; color: #d1d5db; font-size: 12px; cursor: pointer;
 }
 
-.editor-pane { width: 36%; overflow-y: auto; padding: 16px; background: #f3f4f6; }
-.preview-pane { flex: 1; overflow-y: auto; padding: 24px; background: #6b7280; display: flex; justify-content: center; }
+.editor-pane { width: 36%; overflow-y: auto; overflow-x: hidden; padding: 16px; background: #f3f4f6; }
+.preview-pane { flex: 1; overflow-y: auto; overflow-x: hidden; padding: 24px; background: #6b7280; display: flex; justify-content: center; }
+
+.final-preview-pane {
+  flex: 1; overflow-y: auto; overflow-x: hidden; padding: 40px; background: #6b7280; display: flex; justify-content: center;
+}
+
+.template-gallery {
+  flex: 1; overflow-y: auto; overflow-x: hidden; padding: 32px; background: #6b7280;
+  display: flex; flex-wrap: wrap; gap: 28px; justify-content: center; align-content: flex-start;
+}
+.template-card {
+  background: #fff; border: 3px solid transparent; border-radius: 10px; padding: 10px 10px 14px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer;
+}
+.template-card:hover { background: #fff; border-color: #93c5fd; }
+.template-card.active { border-color: #2563eb; }
+.template-thumb {
+  width: 240px; height: 339px; overflow: hidden; border: 1px solid #e5e7eb; background: #fff; position: relative;
+}
+.template-thumb-inner { transform: scale(0.302); transform-origin: top left; width: 794px; }
+.template-label { font-weight: 600; font-size: 14px; color: #111; }
 
 .editor h2 { font-size: 15px; margin: 0 0 8px; display: flex; align-items: center; gap: 8px; }
 .editor h2 button { font-size: 12px; padding: 2px 8px; }

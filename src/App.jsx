@@ -3,6 +3,7 @@ import { emptyResume, normalizeResume } from './data.js';
 import SectionNav from './SectionNav.jsx';
 import Editor from './Editor.jsx';
 import Preview from './Preview.jsx';
+import TemplateGallery from './TemplateGallery.jsx';
 import { improveWithAI } from './ai.js';
 
 const STORAGE_KEY = 'resume-builder:resume';
@@ -31,6 +32,7 @@ export default function App() {
   const [template, setTemplate] = useState('resumatic');
   const [status, setStatus] = useState('');
   const [activeSection, setActiveSection] = useState('personal');
+  const [activeTab, setActiveTab] = useState('details');
   const [saveState, setSaveState] = useState('saved');
   const [snapshots, setSnapshots] = useState(loadSnapshots);
   const [showSettings, setShowSettings] = useState(false);
@@ -136,107 +138,137 @@ export default function App() {
   return (
     <div className="app">
       <header className="toolbar">
-        <div className="toolbar-left">
-          <button className="icon-btn" title="Settings" onClick={() => { setShowSettings((v) => !v); setShowSnapshots(false); }}>
-            ⚙
-          </button>
-          {showSettings && (
-            <div className="popover">
-              <div className="popover-header">
-                <strong>Settings</strong>
-                <button className="popover-close" onClick={() => setShowSettings(false)}>×</button>
+        <div className="toolbar-row toolbar-row-tabs">
+          <div className="toolbar-group">
+            <button className="icon-btn" title="Settings" onClick={() => { setShowSettings((v) => !v); setShowSnapshots(false); }}>
+              ⚙
+            </button>
+            {showSettings && (
+              <div className="popover settings-popover">
+                <div className="popover-header">
+                  <strong>Settings</strong>
+                  <button className="popover-close" onClick={() => setShowSettings(false)}>×</button>
+                </div>
+                <p className="popover-hint">Changes autosave automatically to this device.</p>
+                <button className="popover-action danger" onClick={resetResume}>Reset resume to blank</button>
               </div>
-              <p className="popover-hint">Changes autosave automatically to this device.</p>
-              <button className="popover-action danger" onClick={resetResume}>Reset resume to blank</button>
-            </div>
-          )}
-          <span className={`save-status ${saveState}`}>
-            {saveState === 'saving' ? 'Saving…' : 'All changes saved'}
-          </span>
-        </div>
+            )}
+          </div>
 
-        <div className="spacer" />
-
-        <select value={template} onChange={(e) => setTemplate(e.target.value)}>
-          <option value="resumatic">Resumatic</option>
-          <option value="classic">Classic</option>
-          <option value="modern">Modern</option>
-        </select>
-
-        <div className="toolbar-group">
-          <button onClick={makeSnapshot}>📸 Make Snapshot</button>
-          <button onClick={() => { setShowSnapshots((v) => !v); setShowSettings(false); }}>
-            Snapshot Restore ({snapshots.length})
-          </button>
-          {showSnapshots && (
-            <div className="popover snapshots-popover">
-              <div className="popover-header">
-                <strong>Snapshots</strong>
-                <button className="popover-close" onClick={() => setShowSnapshots(false)}>×</button>
-              </div>
-              <button className="popover-action danger" disabled={snapshots.length === 0} onClick={clearSnapshots}>
-                Clear All Snapshots
+          <div className="tabs-group">
+            <div className="tabs">
+              <button className={activeTab === 'template' ? 'active' : ''} onClick={() => setActiveTab('template')}>
+                Template
               </button>
-              {snapshots.length === 0 ? (
-                <p className="popover-hint">No snapshots yet — take one before making risky changes.</p>
-              ) : (
-                <table className="snapshot-table">
-                  <thead>
-                    <tr>
-                      <th>ID</th>
-                      <th>Name</th>
-                      <th>Date &amp; Time</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {snapshots.map((s, i) => (
-                      <tr key={s.id}>
-                        <td>{i + 1}</td>
-                        <td>
-                          <input
-                            className="snapshot-name-input"
-                            placeholder="Untitled"
-                            value={s.name || ''}
-                            onChange={(e) => renameSnapshot(s.id, e.target.value)}
-                          />
-                        </td>
-                        <td>{s.label}</td>
-                        <td>
-                          <div className="snapshot-actions">
-                            <button onClick={() => restoreSnapshot(s)}>Restore</button>
-                            <button className="danger" onClick={() => deleteSnapshot(s.id)}>Delete</button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
+              <button className={activeTab === 'details' ? 'active' : ''} onClick={() => setActiveTab('details')}>
+                Details
+              </button>
+              <button className={activeTab === 'preview' ? 'active' : ''} onClick={() => setActiveTab('preview')}>
+                Final Preview
+              </button>
             </div>
-          )}
+
+            <button onClick={exportPDF}>Export PDF</button>
+          </div>
         </div>
 
-        <button onClick={exportPDF}>Export PDF</button>
-        <button className="ai-btn" onClick={aiImprove} title="Add AI later">
-          ✨ Improve with AI
-        </button>
-        <span className="status">{status}</span>
+        <div className="toolbar-row">
+          <div className="toolbar-group">
+            <button onClick={makeSnapshot}>📸 Make Snapshot</button>
+            <button onClick={() => { setShowSnapshots((v) => !v); setShowSettings(false); }}>
+              Snapshot Restore ({snapshots.length})
+            </button>
+            {showSnapshots && (
+              <div className="popover snapshots-popover">
+                <div className="popover-header">
+                  <strong>Snapshots</strong>
+                  <button className="popover-close" onClick={() => setShowSnapshots(false)}>×</button>
+                </div>
+                <button className="popover-action danger" disabled={snapshots.length === 0} onClick={clearSnapshots}>
+                  Clear All Snapshots
+                </button>
+                {snapshots.length === 0 ? (
+                  <p className="popover-hint">No snapshots yet — take one before making risky changes.</p>
+                ) : (
+                  <table className="snapshot-table">
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Date &amp; Time</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {snapshots.map((s, i) => (
+                        <tr key={s.id}>
+                          <td>{i + 1}</td>
+                          <td>
+                            <input
+                              className="snapshot-name-input"
+                              placeholder="Untitled"
+                              value={s.name || ''}
+                              onChange={(e) => renameSnapshot(s.id, e.target.value)}
+                            />
+                          </td>
+                          <td>{s.label}</td>
+                          <td>
+                            <div className="snapshot-actions">
+                              <button onClick={() => restoreSnapshot(s)}>Restore</button>
+                              <button className="danger" onClick={() => deleteSnapshot(s.id)}>Delete</button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="toolbar-left">
+            <span className={`save-status ${saveState}`}>
+              {saveState === 'saving' ? 'Saving…' : 'All changes saved'}
+            </span>
+          </div>
+
+          <div className="spacer" />
+
+          <button className="ai-btn" onClick={aiImprove} title="Add AI later">
+            ✨ Improve with AI
+          </button>
+          <span className="status">{status}</span>
+        </div>
       </header>
 
       <main className="workspace">
-        <SectionNav
-          resume={resume}
-          setResume={setResume}
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-        />
-        <section className="editor-pane">
-          <Editor resume={resume} setResume={setResume} activeSection={activeSection} />
-        </section>
-        <section className="preview-pane">
-          <Preview resume={resume} template={template} />
-        </section>
+        {activeTab === 'template' && (
+          <TemplateGallery resume={resume} template={template} setTemplate={setTemplate} />
+        )}
+
+        {activeTab === 'details' && (
+          <>
+            <SectionNav
+              resume={resume}
+              setResume={setResume}
+              activeSection={activeSection}
+              setActiveSection={setActiveSection}
+            />
+            <section className="editor-pane">
+              <Editor resume={resume} setResume={setResume} activeSection={activeSection} />
+            </section>
+            <section className="preview-pane">
+              <Preview resume={resume} template={template} />
+            </section>
+          </>
+        )}
+
+        {activeTab === 'preview' && (
+          <section className="final-preview-pane">
+            <Preview resume={resume} template={template} />
+          </section>
+        )}
       </main>
     </div>
   );
