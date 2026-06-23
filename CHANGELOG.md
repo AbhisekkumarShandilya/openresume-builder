@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.1.0
+
+- Added autocomplete suggestions (a native `<datalist>` dropdown) for Title, Role, Skill, and Degree fields, seeded from a curated list of common job titles, skills, and degrees.
+- Added real spellcheck-based autocorrect: Electron's spellchecker wasn't wired up at all before, so misspellings had no underline and right-clicking did nothing. Now misspelled words get the usual red underline, and right-clicking offers correction suggestions, "Add to Dictionary", and Cut/Copy/Paste.
+- Replaced the bulleted-vs-numbered toggle with a full list-style picker (bullets: •, ○, ▪, –; numbering: 1., a., A., i., I.), matching a Word/LibreOffice-style gallery.
+- Added support for an intro sentence before a field's list: a blank line before your points turns everything above it into plain text instead of a bullet, and a new "¶" toolbar button lets you pull a highlighted line into or out of the list directly.
+- A field with exactly one point now renders as plain text instead of a single, oddly lonely bullet.
+- Bold and Italic now combine correctly when both are applied to the same selection (yielding real bold+italic) and toggle off independently when re-applied — previously, applying one after the other (or re-applying the same one) corrupted the text with stray or duplicated asterisks.
+- Tab/Shift+Tab now move focus to the next/previous field like any normal input, instead of being trapped to indent/outdent a sub-bullet; that indenting moved to Ctrl+]/Ctrl+[.
+- Fixed a CSS specificity bug that double-rendered numbered list markers (e.g. "1. 1.") in the Resumatic template.
+- Fixed a bug where pressing Enter after your last point (to type a new one) left a trailing blank line that collapsed the entire list into one merged line with no bullets.
+- Bullet/list fields now show a distinct teal outline when focused, instead of the default ring, so they're recognizable as list fields at a glance.
+
 ## 2.0.0
 
 - Replaced the fixed Experience/Education/Skills layout with an ordered, customizable sections model: add, remove, and reorder whole sections (left nav, with ▲▼ controls and a live item count) and reorder individual entries within a section.

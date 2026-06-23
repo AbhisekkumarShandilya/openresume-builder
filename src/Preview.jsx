@@ -1,17 +1,30 @@
 import React from 'react';
-import { renderFormatted } from './format.jsx';
+import { renderFormatted, splitIntroAndBullets } from './format.jsx';
+import { normalizeBulletStyle } from './bulletStyles.js';
 
-function Bullets({ bullets, className, ordered }) {
-  // The editor keeps blank lines around while typing (e.g. the line you're
-  // about to fill in after pressing Enter) — drop them only here, at render time.
-  const visible = (bullets || []).filter((b) => b.trim());
-  if (visible.length === 0) return null;
+function Bullets({ bullets, className, style }) {
+  // A field can hold an intro line (rendered as a plain paragraph) before
+  // its list — see splitIntroAndBullets. The editor also keeps blank lines
+  // around while typing the list itself (e.g. the line you're about to fill
+  // in after pressing Enter) — those are dropped only here, at render time.
+  const { intro, bulletLines } = splitIntroAndBullets(bullets);
+  const visible = bulletLines.filter((b) => b.trim());
+  if (!intro && visible.length === 0) return null;
+  // A single point doesn't read as a "list" — drop the marker and show it
+  // as plain text, matching how a lone bullet usually looks in a real resume.
+  const isSinglePoint = visible.length === 1;
   return (
-    <ul className={[className, ordered ? 'ordered' : ''].filter(Boolean).join(' ')}>
-      {visible.map((b, i) => (
-        <li key={i} className={/^\s/.test(b) ? 'sub' : ''}>{renderFormatted(b.trim())}</li>
-      ))}
-    </ul>
+    <>
+      {intro && <p className="r-bullet-intro">{renderFormatted(intro)}</p>}
+      {isSinglePoint && <p className="r-bullet-intro">{renderFormatted(visible[0].trim())}</p>}
+      {visible.length > 1 && (
+        <ul className={[className, 'r-list', `style-${normalizeBulletStyle(style)}`].filter(Boolean).join(' ')}>
+          {visible.map((b, i) => (
+            <li key={i} className={/^\s/.test(b) ? 'sub' : ''}>{renderFormatted(b.trim())}</li>
+          ))}
+        </ul>
+      )}
+    </>
   );
 }
 
@@ -33,7 +46,7 @@ function ResumaticSection({ section }) {
                 <em>{x.role}</em>
                 <em>{x.location}</em>
               </div>
-              <Bullets bullets={x.bullets} className="r-bullets" ordered={x.bulletStyle === 'numbered'} />
+              <Bullets bullets={x.bullets} className="r-bullets" style={x.bulletStyle} />
             </div>
           ))}
         </section>
@@ -52,7 +65,7 @@ function ResumaticSection({ section }) {
                 <em>{x.role}</em>
                 <em>{x.link}</em>
               </div>
-              <Bullets bullets={x.bullets} className="r-bullets" ordered={x.bulletStyle === 'numbered'} />
+              <Bullets bullets={x.bullets} className="r-bullets" style={x.bulletStyle} />
             </div>
           ))}
         </section>
@@ -71,7 +84,7 @@ function ResumaticSection({ section }) {
                 <em>{x.degree}</em>
                 <em>{x.location}</em>
               </div>
-              <Bullets bullets={x.bullets} className="r-bullets" ordered={x.bulletStyle === 'numbered'} />
+              <Bullets bullets={x.bullets} className="r-bullets" style={x.bulletStyle} />
             </div>
           ))}
         </section>
@@ -106,7 +119,7 @@ function ResumaticSection({ section }) {
       return section.items.some((b) => b.trim()) ? (
         <section key={section.id}>
           <h3>{section.title}</h3>
-          <Bullets bullets={section.items} className="r-bullets" ordered={section.bulletStyle === 'numbered'} />
+          <Bullets bullets={section.items} className="r-bullets" style={section.bulletStyle} />
         </section>
       ) : null;
     default:
@@ -152,7 +165,7 @@ function StandardSection({ section }) {
                 <span>{x.start} – {x.end}</span>
               </div>
               <div className="r-sub">{[x.company, x.location].filter(Boolean).join(' — ')}</div>
-              <Bullets bullets={x.bullets} ordered={x.bulletStyle === 'numbered'} />
+              <Bullets bullets={x.bullets} style={x.bulletStyle} />
             </div>
           ))}
         </section>
@@ -168,7 +181,7 @@ function StandardSection({ section }) {
                 <span>{x.start} – {x.end}</span>
               </div>
               <div className="r-sub">{[x.role, x.link].filter(Boolean).join(' — ')}</div>
-              <Bullets bullets={x.bullets} ordered={x.bulletStyle === 'numbered'} />
+              <Bullets bullets={x.bullets} style={x.bulletStyle} />
             </div>
           ))}
         </section>
@@ -184,7 +197,7 @@ function StandardSection({ section }) {
                 <span>{x.start} – {x.end}</span>
               </div>
               <div className="r-sub">{[x.school, x.location].filter(Boolean).join(' — ')}</div>
-              <Bullets bullets={x.bullets} ordered={x.bulletStyle === 'numbered'} />
+              <Bullets bullets={x.bullets} style={x.bulletStyle} />
             </div>
           ))}
         </section>
@@ -219,7 +232,7 @@ function StandardSection({ section }) {
       return section.items.some((b) => b.trim()) ? (
         <section key={section.id}>
           <h3>{section.title}</h3>
-          <Bullets bullets={section.items} ordered={section.bulletStyle === 'numbered'} />
+          <Bullets bullets={section.items} style={section.bulletStyle} />
         </section>
       ) : null;
     default:

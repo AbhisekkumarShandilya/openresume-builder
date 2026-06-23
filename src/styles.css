@@ -124,6 +124,23 @@ body, html, #root { margin: 0; height: 100%; overflow-x: hidden; font-family: sy
 .format-toolbar button { width: 28px; height: 28px; padding: 0; font-size: 13px; }
 .format-hint { font-size: 11px; color: #6b7280; }
 
+.list-style-wrap { position: relative; }
+.list-style-wrap > button { width: auto; padding: 0 8px; }
+.list-style-popover {
+  position: absolute; top: 32px; left: 0; z-index: 50; width: 200px;
+  background: #111827; color: #fff; border-radius: 8px; padding: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #374151;
+}
+.list-style-group-label { font-size: 11px; color: #9ca3af; margin: 6px 0 4px; }
+.list-style-group-label:first-child { margin-top: 0; }
+.list-style-options { display: flex; gap: 4px; }
+.list-style-options button {
+  flex: 1; width: auto; height: 28px; padding: 0; font-size: 13px;
+  background: #374151; color: #fff;
+}
+.list-style-options button:hover { background: #4b5563; }
+.list-style-options button.active { background: #2563eb; }
+
 .editor h2 { font-size: 15px; margin: 0 0 8px; display: flex; align-items: center; gap: 8px; }
 .editor h2 button { font-size: 12px; padding: 2px 8px; }
 .editor h2 .section-title-input {
@@ -137,6 +154,9 @@ body, html, #root { margin: 0; height: 100%; overflow-x: hidden; font-family: sy
   width: 100%; padding: 8px; margin: 4px 0; border: 1px solid #d1d5db; border-radius: 6px; font-size: 13px;
 }
 .editor textarea { min-height: 70px; resize: vertical; }
+/* Distinct outline so a list field is recognizable as "this becomes points"
+   at a glance, separate from the normal blue focus ring on plain inputs. */
+.editor textarea.bullet-field:focus { outline: 2px solid #0d9488; outline-offset: -1px; border-color: #0d9488; }
 .editor .row { display: flex; gap: 8px; }
 .editor .card { background: #fff; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e5e7eb; }
 .editor button { cursor: pointer; border: 0; border-radius: 6px; padding: 4px 10px; background: #2563eb; color: #fff; }
@@ -169,8 +189,10 @@ body, html, #root { margin: 0; height: 100%; overflow-x: hidden; font-family: sy
 .r-entry { margin: 8px 0; }
 .r-entry-head { display: flex; justify-content: space-between; }
 .r-sub { color: #555; font-style: italic; font-size: 13px; }
-.resume-sheet ul { margin: 4px 0 0 18px; }
+.resume-sheet ul.r-list { margin: 4px 0 0; padding: 0; list-style: none; }
 .resume-sheet li { font-size: 13px; margin: 2px 0; }
+.resume-sheet ul.r-list li { position: relative; padding-left: 16px; }
+.r-bullet-intro { font-size: 13px; margin: 4px 0 0; }
 .r-skills { display: flex; flex-wrap: wrap; gap: 6px; }
 .r-chip { background: #eef2ff; padding: 3px 9px; border-radius: 12px; font-size: 12px; }
 
@@ -195,18 +217,42 @@ body, html, #root { margin: 0; height: 100%; overflow-x: hidden; font-family: sy
 .tpl-resumatic .r-entry-sub {
   display: flex; justify-content: space-between; font-style: italic; font-size: 12.5px; margin-bottom: 4px;
 }
-.tpl-resumatic .r-bullets { list-style: none; margin: 4px 0 0; padding: 0; }
-.tpl-resumatic .r-bullets li { position: relative; padding-left: 16px; font-size: 12.5px; margin: 2px 0; }
-.tpl-resumatic .r-bullets li::before { content: '▪'; position: absolute; left: 0; top: 0; }
-.tpl-resumatic .r-bullets li.sub { margin-left: 22px; }
-.tpl-resumatic .r-bullets li.sub::before { content: '○'; font-size: 9px; top: 3px; }
+.tpl-resumatic .r-bullets li { font-size: 12.5px; }
+.tpl-resumatic .r-bullet-intro { font-size: 12.5px; }
 .tpl-resumatic .r-skills-text { font-size: 12.5px; margin: 0; }
 
-/* Numbered list variant — toggled per-field via the "1." formatting button */
-.tpl-resumatic .r-bullets.ordered { counter-reset: r-bullets-count; }
-.tpl-resumatic .r-bullets.ordered li:not(.sub) { counter-increment: r-bullets-count; }
-.tpl-resumatic .r-bullets.ordered li:not(.sub)::before { content: counter(r-bullets-count) '.'; }
-.resume-sheet ul.ordered { list-style-type: decimal; }
+/* List style gallery (src/bulletStyles.js) — bullet glyphs and numbering
+   formats, picked per-field via the format toolbar's list-style popover.
+   Every marker renders through ::before (not native list-style) so the
+   same rules work across templates and PDF export consistently. */
+.resume-sheet ul.r-list li::before { position: absolute; left: 0; top: 0; }
+.resume-sheet ul.r-list li.sub { margin-left: 22px; }
+.resume-sheet ul.r-list li.sub::before { content: '○'; font-size: 9px; top: 3px; }
+
+.resume-sheet ul.r-list.style-disc li:not(.sub)::before { content: '•'; }
+.resume-sheet ul.r-list.style-circle li:not(.sub)::before { content: '○'; }
+.resume-sheet ul.r-list.style-square li:not(.sub)::before { content: '▪'; }
+.resume-sheet ul.r-list.style-dash li:not(.sub)::before { content: '–'; }
+
+.resume-sheet ul.r-list.style-decimal,
+.resume-sheet ul.r-list.style-lower-alpha,
+.resume-sheet ul.r-list.style-upper-alpha,
+.resume-sheet ul.r-list.style-lower-roman,
+.resume-sheet ul.r-list.style-upper-roman {
+  counter-reset: r-list-count;
+}
+.resume-sheet ul.r-list.style-decimal li:not(.sub),
+.resume-sheet ul.r-list.style-lower-alpha li:not(.sub),
+.resume-sheet ul.r-list.style-upper-alpha li:not(.sub),
+.resume-sheet ul.r-list.style-lower-roman li:not(.sub),
+.resume-sheet ul.r-list.style-upper-roman li:not(.sub) {
+  counter-increment: r-list-count;
+}
+.resume-sheet ul.r-list.style-decimal li:not(.sub)::before { content: counter(r-list-count, decimal) '.'; }
+.resume-sheet ul.r-list.style-lower-alpha li:not(.sub)::before { content: counter(r-list-count, lower-alpha) '.'; }
+.resume-sheet ul.r-list.style-upper-alpha li:not(.sub)::before { content: counter(r-list-count, upper-alpha) '.'; }
+.resume-sheet ul.r-list.style-lower-roman li:not(.sub)::before { content: counter(r-list-count, lower-roman) '.'; }
+.resume-sheet ul.r-list.style-upper-roman li:not(.sub)::before { content: counter(r-list-count, upper-roman) '.'; }
 
 /* Print / PDF: only the sheet shows, full bleed */
 @media print {

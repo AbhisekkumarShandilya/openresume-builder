@@ -60,6 +60,40 @@ function createWindow() {
     },
   });
 
+  win.webContents.session.setSpellCheckerLanguages(['en-US']);
+
+  // Electron renders spelling-error underlines automatically once a
+  // spellchecker language is set, but doesn't show any context menu out of
+  // the box — without this, right-clicking a misspelled word does nothing.
+  win.webContents.on('context-menu', (_event, params) => {
+    const items = [];
+
+    if (params.misspelledWord) {
+      for (const suggestion of params.dictionarySuggestions) {
+        items.push({ label: suggestion, click: () => win.webContents.replaceMisspelling(suggestion) });
+      }
+      if (params.dictionarySuggestions.length) items.push({ type: 'separator' });
+      items.push({
+        label: 'Add to Dictionary',
+        click: () => win.webContents.session.addWordToSpellCheckerDictionary(params.misspelledWord),
+      });
+      items.push({ type: 'separator' });
+    }
+
+    if (params.isEditable) {
+      items.push(
+        { label: 'Cut', role: 'cut', enabled: params.editFlags.canCut },
+        { label: 'Copy', role: 'copy', enabled: params.editFlags.canCopy },
+        { label: 'Paste', role: 'paste', enabled: params.editFlags.canPaste },
+        { label: 'Select All', role: 'selectAll', enabled: params.editFlags.canSelectAll },
+      );
+    } else if (params.selectionText) {
+      items.push({ label: 'Copy', role: 'copy' });
+    }
+
+    if (items.length) Menu.buildFromTemplate(items).popup({ window: win });
+  });
+
   if (isDev) {
     win.loadURL('http://localhost:5173');
     win.webContents.openDevTools();

@@ -11,9 +11,9 @@
 - [x] Increase functionality: add sections for projects, certifications, custom — still missing dedicated languages/links fields
 - [ ] Multiple saved resumes / profile switching (snapshots now cover backup/restore, but not distinct named profiles)
 - [ ] Export to DOCX and plain text, not just PDF
-- [ ] Spell-check / grammar check on text fields
+- [x] Spell-check / grammar check on text fields — native spellcheck underlines + right-click correction suggestions; autocomplete dropdowns for Title/Role/Skill/Degree
 - [ ] Undo/redo for edits (snapshots are a coarser-grained alternative)
-- [x] Basic rich text formatting in Summary/bullet fields — bold/italic markup, bulleted vs. numbered list toggle, Word/LibreOffice-style list editing (Tab/Shift+Tab to indent, Enter continues the list at the same level)
+- [x] Basic rich text formatting in Summary/bullet fields — bold/italic markup (combinable), a Word/LibreOffice-style bullet & numbering picker, intro-sentence-before-list support, Word-style list editing (Ctrl+]/Ctrl+[ to indent, Enter continues the list at the same level)
 
 ## AI Integration
 - [ ] Implement the AI integration feature (currently stubbed in `src/ai.js`)

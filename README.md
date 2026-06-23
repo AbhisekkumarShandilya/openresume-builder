@@ -9,7 +9,8 @@ A free, open-source, cross-platform resume builder built with **Electron + React
 - **Customizable resume sections** — Experience, Education, Skills, Projects, Certifications, and free-form Custom sections; add, remove, rename, and reorder whole sections, and reorder individual entries within a section
 - **Three templates** — Classic, Modern, and Resumatic (serif, bold header), switchable from a live-thumbnail template gallery
 - **Template / Details / Final Preview workspace** — pick a template visually, edit in the section-based form, then check a clean chrome-free preview before exporting
-- **In-editor text formatting** — bold/italic markup, a bulleted vs. numbered list toggle, and Word/LibreOffice-style list editing (Tab/Shift+Tab to indent, Enter continues the list)
+- **In-editor text formatting** — bold/italic markup (combinable into bold+italic), a Word/LibreOffice-style bullet & numbering picker (•, ○, ▪, –, 1., a., A., i., I.), an intro-sentence-before-the-list option, and Word-style list editing (Ctrl+]/Ctrl+[ to indent, Enter continues the list)
+- **Autocomplete & autocorrect** — suggestion dropdowns for Title, Role, Skill, and Degree fields, plus real spellcheck with right-click correction suggestions
 - **Snapshot backups** — take a named, timestamped snapshot at any point, then browse/restore/rename/delete from a table, with a confirmation warning before restoring
 - **Autosave status indicator** — "Saving…" / "All changes saved" in the toolbar
 - **Save / Open as JSON** — via the native File menu (Ctrl+O / Ctrl+Shift+S) — keep multiple resume files and reopen them anytime
