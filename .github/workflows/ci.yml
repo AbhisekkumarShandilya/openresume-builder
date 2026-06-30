@@ -34,7 +34,7 @@ jobs:
         with:
           node-version: 22
 
-      - run: npm ci
+      - run: npm ci --foreground-scripts
 
       - name: DEBUG electron binary smoke check
         run: node e2e/debug-electron.cjs
