@@ -33,4 +33,7 @@ jobs:
 
       - run: npm ci
 
+      - name: DEBUG electron binary smoke check
+        run: node_modules\electron\dist\electron.exe --version
+
       - run: npm run test:e2e
