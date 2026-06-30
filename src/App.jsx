@@ -5,6 +5,7 @@ import Editor from './Editor.jsx';
 import Preview from './Preview.jsx';
 import TemplateGallery from './TemplateGallery.jsx';
 import { improveWithAI } from './ai.js';
+import { version as appVersion } from '../package.json';
 
 const STORAGE_KEY = 'resume-builder:resume';
 const SNAPSHOTS_KEY = 'resume-builder:snapshots';
@@ -37,6 +38,8 @@ export default function App() {
   const [snapshots, setSnapshots] = useState(loadSnapshots);
   const [showSettings, setShowSettings] = useState(false);
   const [showSnapshots, setShowSnapshots] = useState(false);
+  const [updateChecking, setUpdateChecking] = useState(false);
+  const [updateMessage, setUpdateMessage] = useState('');
   const isFirstRender = useRef(true);
   const resumeRef = useRef(resume);
   resumeRef.current = resume;
@@ -135,6 +138,22 @@ export default function App() {
     setShowSettings(false);
   };
 
+  const checkForUpdates = async () => {
+    setUpdateChecking(true);
+    setUpdateMessage('');
+    const res = await window.api.checkForUpdates();
+    setUpdateChecking(false);
+    if (!res.ok && res.reason === 'dev-mode') {
+      setUpdateMessage('Update checks are disabled in development.');
+    } else if (!res.ok) {
+      setUpdateMessage(`Update check failed: ${res.message || 'unknown error'}`);
+    } else if (res.hasUpdate) {
+      setUpdateMessage(`Update available: v${res.latest} (you have v${res.version}).`);
+    } else {
+      setUpdateMessage(`You're on the latest version (v${res.version}).`);
+    }
+  };
+
   return (
     <div className="app">
       <header className="toolbar">
@@ -150,6 +169,11 @@ export default function App() {
                   <button className="popover-close" onClick={() => setShowSettings(false)}>×</button>
                 </div>
                 <p className="popover-hint">Changes autosave automatically to this device.</p>
+                <p className="popover-hint">OpenResume Builder v{appVersion}</p>
+                <button className="popover-action" disabled={updateChecking} onClick={checkForUpdates}>
+                  {updateChecking ? 'Checking…' : 'Check for Updates'}
+                </button>
+                {updateMessage && <p className="popover-hint">{updateMessage}</p>}
                 <button className="popover-action danger" onClick={resetResume}>Reset resume to blank</button>
               </div>
             )}

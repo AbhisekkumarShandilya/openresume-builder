@@ -47,6 +47,34 @@ function checkForUpdates() {
   autoUpdater.checkForUpdates().catch((err) => console.error('checkForUpdates failed:', err));
 }
 
+// Manual "Check for Updates" button in Settings — unlike the silent
+// on-launch checkForUpdates() above, this reports the outcome back to the
+// renderer (checking/up-to-date/error), not just the update-available case.
+// The existing update-available/update-downloaded listeners above still
+// fire and show their native dialogs same as the on-launch check; this just
+// adds renderer-visible feedback for the "you're already up to date" and
+// "check failed" cases, which previously had no UI at all.
+ipcMain.handle('check-for-updates', () => {
+  const version = app.getVersion();
+  if (isDev || !app.isPackaged) {
+    return Promise.resolve({ ok: false, reason: 'dev-mode', version });
+  }
+  return new Promise((resolve) => {
+    const cleanup = () => {
+      autoUpdater.off('update-available', onAvailable);
+      autoUpdater.off('update-not-available', onNotAvailable);
+      autoUpdater.off('error', onError);
+    };
+    const onAvailable = (info) => { cleanup(); resolve({ ok: true, hasUpdate: true, version, latest: info.version }); };
+    const onNotAvailable = () => { cleanup(); resolve({ ok: true, hasUpdate: false, version }); };
+    const onError = (err) => { cleanup(); resolve({ ok: false, reason: 'error', message: err.message, version }); };
+    autoUpdater.once('update-available', onAvailable);
+    autoUpdater.once('update-not-available', onNotAvailable);
+    autoUpdater.once('error', onError);
+    autoUpdater.checkForUpdates().catch((err) => { cleanup(); resolve({ ok: false, reason: 'error', message: err.message, version }); });
+  });
+});
+
 function createWindow() {
   win = new BrowserWindow({
     width: 1200,
