@@ -35,7 +35,9 @@ async function main() {
 
   const app = await _electron.launch({
     executablePath: path.resolve('node_modules/electron/dist/electron.exe'),
-    args: [path.resolve('.')],
+    // --disable-gpu avoids a renderer/GPU-process crash on GitHub Actions'
+    // Windows runners, which have no real GPU.
+    args: ['--disable-gpu', path.resolve('.')],
     env,
   });
 
