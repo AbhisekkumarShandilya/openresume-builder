@@ -26,7 +26,7 @@
 - [x] macOS .dmg built via GitHub Actions macOS runner (x64 + arm64)
 - [ ] Verify the macOS .dmg actually runs correctly on real Mac hardware — currently untested
 - [x] Build and publish the Linux AppImage via GitHub Actions ubuntu-latest runner
-- [ ] Verify the Linux AppImage actually runs correctly on a real Linux machine — currently untested
+- [x] Verify the Linux AppImage actually runs correctly on a real Linux machine — tested on WSL2 (Ubuntu 26.04, real Linux kernel) via WSLg, full UI renders and works correctly. Needs these system libs on a fresh box (not bundled in the AppImage): `libfuse2t64` (FUSE, required to mount any AppImage), `libnss3`, `libnspr4`, `libatk1.0-0t64`, `libatk-bridge2.0-0t64`, `libcups2t64`, `libdrm2`, `libxkbcommon0`, `libxcomposite1`, `libxdamage1`, `libxfixes3`, `libxrandr2`, `libgbm1`, `libpango-1.0-0`, `libasound2t64`, `libgtk-3-0t64`
 - [ ] Android app via Capacitor (wraps the existing React/Vite build; Electron file I/O needs swapping for Capacitor Filesystem/Share plugins)
 
 ## Other
