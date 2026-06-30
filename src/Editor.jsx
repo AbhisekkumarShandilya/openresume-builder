@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { SECTION_TYPES } from './data.js';
 import { JOB_TITLE_SUGGESTIONS, DEGREE_SUGGESTIONS } from './autocompleteData.js';
 import { BULLET_STYLE_GROUPS, normalizeBulletStyle } from './bulletStyles.js';

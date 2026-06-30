@@ -1,4 +1,3 @@
-import React from 'react';
 import { SECTION_TYPES, createSection } from './data.js';
 
 export default function SectionNav({ resume, setResume, activeSection, setActiveSection }) {

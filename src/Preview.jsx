@@ -1,4 +1,3 @@
-import React from 'react';
 import { renderFormatted, splitIntroAndBullets } from './format.jsx';
 import { normalizeBulletStyle } from './bulletStyles.js';
 

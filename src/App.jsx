@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { emptyResume, normalizeResume } from './data.js';
 import SectionNav from './SectionNav.jsx';
 import Editor from './Editor.jsx';

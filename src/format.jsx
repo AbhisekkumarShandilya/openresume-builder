@@ -1,5 +1,3 @@
-import React from 'react';
-
 // Minimal formatting syntax supported in Summary/bullet text: **bold**,
 // *italic* (or _italic_), and ***bold+italic*** (applying both from the
 // toolbar combines rather than corrupting the markup — see applyMark in

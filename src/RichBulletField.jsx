@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 // A contenteditable bullet editor that LOOKS like real bold/italic (no
 // visible ** / * markers) while still reading/writing the same marker-string
