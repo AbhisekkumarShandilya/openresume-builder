@@ -2,6 +2,21 @@ import React from 'react';
 import { renderFormatted, splitIntroAndBullets } from './format.jsx';
 import { normalizeBulletStyle } from './bulletStyles.js';
 
+// Each non-blank skill is its own stacked line (not a chip/pill) — typically
+// a "Label: comma, separated, items" category, with B/I markup honored so a
+// leading "**Label:**" renders genuinely bold.
+function SkillLines({ items }) {
+  const skills = items.filter((s) => s.trim());
+  if (skills.length === 0) return null;
+  return (
+    <div className="r-skills">
+      {skills.map((s, i) => (
+        <p className="r-skill-line" key={i}>{renderFormatted(s.trim())}</p>
+      ))}
+    </div>
+  );
+}
+
 function Bullets({ bullets, className, style }) {
   // A field can hold an intro line (rendered as a plain paragraph) before
   // its list — see splitIntroAndBullets. The editor also keeps blank lines
@@ -106,15 +121,13 @@ function ResumaticSection({ section }) {
           ))}
         </section>
       );
-    case 'skills': {
-      const skills = section.items.filter(Boolean);
-      return skills.length > 0 ? (
+    case 'skills':
+      return section.items.some((b) => b.trim()) ? (
         <section key={section.id}>
           <h3>{section.title}</h3>
-          <p className="r-skills-text">{skills.join('; ')}</p>
+          <SkillLines items={section.items} />
         </section>
       ) : null;
-    }
     case 'custom':
       return section.items.some((b) => b.trim()) ? (
         <section key={section.id}>
@@ -217,17 +230,13 @@ function StandardSection({ section }) {
           ))}
         </section>
       );
-    case 'skills': {
-      const skills = section.items.filter(Boolean);
-      return skills.length > 0 ? (
+    case 'skills':
+      return section.items.some((b) => b.trim()) ? (
         <section key={section.id}>
           <h3>{section.title}</h3>
-          <div className="r-skills">
-            {skills.map((sk, i) => <span className="r-chip" key={i}>{sk}</span>)}
-          </div>
+          <SkillLines items={section.items} />
         </section>
       ) : null;
-    }
     case 'custom':
       return section.items.some((b) => b.trim()) ? (
         <section key={section.id}>

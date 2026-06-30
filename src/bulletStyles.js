@@ -7,20 +7,21 @@ export const BULLET_STYLE_GROUPS = [
   {
     label: 'Bullets',
     options: [
-      { id: 'disc', glyph: '•' },
-      { id: 'circle', glyph: '○' },
-      { id: 'square', glyph: '▪' },
-      { id: 'dash', glyph: '–' },
+      { id: 'disc', glyph: '•', name: 'Disc bullets' },
+      { id: 'circle', glyph: '○', name: 'Circle bullets' },
+      { id: 'square', glyph: '▪', name: 'Square bullets' },
+      { id: 'dash', glyph: '–', name: 'Dash bullets' },
+      { id: 'none', glyph: '∅', name: 'No bullet (plain lines)' },
     ],
   },
   {
     label: 'Numbering',
     options: [
-      { id: 'decimal', glyph: '1.' },
-      { id: 'lower-alpha', glyph: 'a.' },
-      { id: 'upper-alpha', glyph: 'A.' },
-      { id: 'lower-roman', glyph: 'i.' },
-      { id: 'upper-roman', glyph: 'I.' },
+      { id: 'decimal', glyph: '1.', name: 'Numbered: 1. 2. 3.' },
+      { id: 'lower-alpha', glyph: 'a.', name: 'Numbered: a. b. c.' },
+      { id: 'upper-alpha', glyph: 'A.', name: 'Numbered: A. B. C.' },
+      { id: 'lower-roman', glyph: 'i.', name: 'Numbered: i. ii. iii.' },
+      { id: 'upper-roman', glyph: 'I.', name: 'Numbered: I. II. III.' },
     ],
   },
 ];

@@ -157,6 +157,16 @@ body, html, #root { margin: 0; height: 100%; overflow-x: hidden; font-family: sy
 /* Distinct outline so a list field is recognizable as "this becomes points"
    at a glance, separate from the normal blue focus ring on plain inputs. */
 .editor textarea.bullet-field:focus { outline: 2px solid #0d9488; outline-offset: -1px; border-color: #0d9488; }
+.rich-bullet-wrap { position: relative; margin: 4px 0; }
+.editor .rich-bullet-field {
+  width: 100%; min-height: 70px; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px;
+  font-size: 13px; font-family: inherit; white-space: pre-wrap; cursor: text;
+}
+.editor .rich-bullet-field:focus { outline: 2px solid #0d9488; outline-offset: -1px; border-color: #0d9488; }
+.editor .rich-bullet-field .rb-line { min-height: 1.3em; }
+.rb-placeholder {
+  position: absolute; top: 8px; left: 8px; color: #9ca3af; font-size: 13px; pointer-events: none;
+}
 .editor .row { display: flex; gap: 8px; }
 .editor .card { background: #fff; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e5e7eb; }
 .editor button { cursor: pointer; border: 0; border-radius: 6px; padding: 4px 10px; background: #2563eb; color: #fff; }
@@ -167,8 +177,13 @@ body, html, #root { margin: 0; height: 100%; overflow-x: hidden; font-family: sy
 .editor .card-controls button.danger { margin-top: 0; }
 
 .editor .skills-list { display: flex; flex-direction: column; gap: 6px; }
-.editor .skill-row { display: flex; gap: 6px; align-items: center; }
-.editor .skill-row input { margin: 0; flex: 1; }
+.editor .skill-row { display: flex; gap: 6px; align-items: flex-start; }
+.editor .skill-row .rich-bullet-wrap { flex: 1; margin: 0; }
+.editor .rich-skill-field {
+  width: 100%; min-height: 36px; padding: 8px; border: 1px solid #d1d5db; border-radius: 6px;
+  font-size: 13px; font-family: inherit; white-space: pre-wrap; cursor: text; box-sizing: border-box;
+}
+.editor .rich-skill-field:focus { outline: 2px solid #2563eb; outline-offset: -1px; border-color: #2563eb; }
 .editor .skill-row .danger {
   flex-shrink: 0; margin-top: 0; width: 30px; height: 30px; padding: 0;
   font-size: 16px; line-height: 1; display: flex; align-items: center; justify-content: center;
@@ -193,13 +208,12 @@ body, html, #root { margin: 0; height: 100%; overflow-x: hidden; font-family: sy
 .resume-sheet li { font-size: 13px; margin: 2px 0; }
 .resume-sheet ul.r-list li { position: relative; padding-left: 16px; }
 .r-bullet-intro { font-size: 13px; margin: 4px 0 0; }
-.r-skills { display: flex; flex-wrap: wrap; gap: 6px; }
-.r-chip { background: #eef2ff; padding: 3px 9px; border-radius: 12px; font-size: 12px; }
+.r-skills { display: flex; flex-direction: column; gap: 8px; }
+.r-skill-line { font-size: 13px; line-height: 1.4; margin: 0; }
 
 /* Modern template variant */
 .tpl-modern .r-header { text-align: left; border-bottom: 4px solid #7c3aed; }
 .tpl-modern h3 { color: #7c3aed; border-color: #ddd6fe; }
-.tpl-modern .r-chip { background: #ede9fe; }
 
 /* Resumatic template variant — serif, bold-name header, company/date and role/location rows */
 .tpl-resumatic { font-family: Georgia, 'Times New Roman', Times, serif; }
@@ -219,7 +233,7 @@ body, html, #root { margin: 0; height: 100%; overflow-x: hidden; font-family: sy
 }
 .tpl-resumatic .r-bullets li { font-size: 12.5px; }
 .tpl-resumatic .r-bullet-intro { font-size: 12.5px; }
-.tpl-resumatic .r-skills-text { font-size: 12.5px; margin: 0; }
+.tpl-resumatic .r-skill-line { font-size: 12.5px; }
 
 /* List style gallery (src/bulletStyles.js) — bullet glyphs and numbering
    formats, picked per-field via the format toolbar's list-style popover.
@@ -233,6 +247,8 @@ body, html, #root { margin: 0; height: 100%; overflow-x: hidden; font-family: sy
 .resume-sheet ul.r-list.style-circle li:not(.sub)::before { content: '○'; }
 .resume-sheet ul.r-list.style-square li:not(.sub)::before { content: '▪'; }
 .resume-sheet ul.r-list.style-dash li:not(.sub)::before { content: '–'; }
+.resume-sheet ul.r-list.style-none li:not(.sub) { padding-left: 0; }
+.resume-sheet ul.r-list.style-none li:not(.sub)::before { content: none; }
 
 .resume-sheet ul.r-list.style-decimal,
 .resume-sheet ul.r-list.style-lower-alpha,

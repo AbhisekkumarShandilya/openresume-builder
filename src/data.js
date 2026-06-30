@@ -4,26 +4,73 @@
 let uidCounter = 0;
 const nextId = () => `${Date.now()}-${uidCounter++}`;
 
+// `fields` drives the Editor's generic card renderer for object-array
+// sections (experience/education/projects/certifications) — each entry is
+// either a standalone field or a `row` of fields shown side by side. Adding
+// a new field here is enough; no per-section JSX block needed in Editor.jsx.
 export const SECTION_TYPES = {
   experience: {
     label: 'Experience',
     newItem: () => ({ id: nextId(), role: '', company: '', location: '', start: '', end: '', bullets: [] }),
+    fields: [
+      { key: 'company', placeholder: 'Company', spellCheck: false },
+      { row: [
+        { key: 'role', placeholder: 'Role', spellCheck: true, list: 'job-title-suggestions' },
+        { key: 'location', placeholder: 'City, ST', spellCheck: true },
+      ] },
+      { row: [
+        { key: 'start', placeholder: 'Start', spellCheck: false },
+        { key: 'end', placeholder: 'End', spellCheck: false },
+      ] },
+    ],
+    bullets: { placeholder: 'One bullet per line (Ctrl+]/Ctrl+[ to indent a sub-bullet)', richText: true },
   },
   education: {
     label: 'Education',
     newItem: () => ({ id: nextId(), degree: '', school: '', location: '', start: '', end: '', bullets: [] }),
+    fields: [
+      { key: 'school', placeholder: 'School', spellCheck: false },
+      { row: [
+        { key: 'degree', placeholder: 'Degree', spellCheck: true, list: 'degree-suggestions' },
+        { key: 'location', placeholder: 'City, ST', spellCheck: true },
+      ] },
+      { row: [
+        { key: 'start', placeholder: 'Start', spellCheck: false },
+        { key: 'end', placeholder: 'End', spellCheck: false },
+      ] },
+    ],
+    bullets: { placeholder: 'One bullet per line (optional; Ctrl+]/Ctrl+[ to indent a sub-bullet)' },
   },
   projects: {
     label: 'Projects',
     newItem: () => ({ id: nextId(), name: '', role: '', link: '', start: '', end: '', bullets: [] }),
+    fields: [
+      { key: 'name', placeholder: 'Project name', spellCheck: false },
+      { row: [
+        { key: 'role', placeholder: 'Role (optional)', spellCheck: true, list: 'job-title-suggestions' },
+        { key: 'link', placeholder: 'Link (optional)', spellCheck: false },
+      ] },
+      { row: [
+        { key: 'start', placeholder: 'Start', spellCheck: false },
+        { key: 'end', placeholder: 'End', spellCheck: false },
+      ] },
+    ],
+    bullets: { placeholder: 'One bullet per line (Ctrl+]/Ctrl+[ to indent a sub-bullet)' },
   },
   certifications: {
     label: 'Certifications',
     newItem: () => ({ id: nextId(), name: '', issuer: '', date: '' }),
+    fields: [
+      { key: 'name', placeholder: 'Certification name', spellCheck: false },
+      { row: [
+        { key: 'issuer', placeholder: 'Issuer', spellCheck: false },
+        { key: 'date', placeholder: 'Date', spellCheck: false },
+      ] },
+    ],
   },
   skills: {
     label: 'Skills',
-    newItem: null, // items is a flat array of strings, edited as one field
+    newItem: null, // items is a flat array of skill strings, edited via ChipInput
   },
   custom: {
     label: 'Custom Section',
