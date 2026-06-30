@@ -36,4 +36,7 @@ jobs:
 
       - run: npm ci
 
+      - name: DEBUG electron binary smoke check
+        run: node e2e/debug-electron.cjs
+
       - run: npm run test:e2e
