@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.2.0-beta.1
+
+- Added a real WYSIWYG editor for the Experience description: bold/italic render for real, with no visible `**`/`*` markers while typing, instead of the old textarea showing raw markup. Also applied to the Custom Section field and to each Skill row. Under the hood it still stores the same marker-string format the preview already parsed, so no data migration was needed.
+- Fixed a bug where clicking Bold/Italic with nothing selected inserted a literal `**text**` placeholder that got permanently stuck in the field once un-toggled, corrupting saved bullets over repeated use — it's now a no-op when there's no selection and no existing markup to toggle.
+- The "¶" (move line into/out of the bulleted list) button and the bullet/numbering style picker now work in the new WYSIWYG fields too, not just the older plain-textarea ones.
+- Redesigned Skills editing as add/delete rows (each skill its own field with a × button, "+ Add Skill" to append), and changed how skills render in the preview from pill/chip boxes to stacked lines — better suited to longer "**Category:** comma, separated, items" entries.
+- Added a month/year date picker for Start/End fields (Experience, Education, Projects): click the field or its 📅 button for a `‹ Year ›` navigator and a month grid, with a "Present" quick-pick for End fields. Future dates are blocked based on the real system clock. The field is still plain text underneath, so existing free-text dates ("2022", "Present", anything custom) keep working.
+- Fixed a pre-existing bug in the Resumatic template where Education entries showed only the end date ("2018") instead of the full range ("2015 – 2018") — Experience and Projects, and the Classic/Modern templates' Education, were already correct.
+- Added the installed version number and a manual "Check for Updates" button to Settings — previously only the silent on-launch check existed, with no UI for "you're already up to date" or "the check failed".
+- Refactored Experience/Education/Projects/Certifications to share one generic field-config-driven card renderer instead of four near-duplicate JSX blocks, making future field additions (like the date picker above) a data-only change.
+- Added the project's first automated test suite: Vitest unit tests for the pure logic (text formatting, bullet styles, resume data migration, list-toggle math, rich-field DOM helpers) and a Playwright e2e smoke test driving the real Electron app end to end.
+
 ## 2.1.0
 
 - Added autocomplete suggestions (a native `<datalist>` dropdown) for Title, Role, Skill, and Degree fields, seeded from a curated list of common job titles, skills, and degrees.

@@ -30,8 +30,8 @@
 - [ ] Android app via Capacitor (wraps the existing React/Vite build; Electron file I/O needs swapping for Capacitor Filesystem/Share plugins)
 
 ## Other
-- [ ] Automated tests (component tests for Editor/Preview, at minimum)
-- [ ] CI workflow for Windows builds + lint on push (mac and Linux build CI already exist)
+- [x] Automated tests — Vitest unit tests for pure logic (format/bulletStyles/data/textEditing/RichBulletField helpers) plus a Playwright e2e smoke suite (`e2e/smoke.mjs`) driving the real Electron app
+- [ ] CI workflow for Windows builds + lint on push (mac and Linux build CI already exist) — `npm test`/`npm run test:e2e` aren't wired into CI yet either
 - [ ] Internationalization (i18n) for multi-language resumes
 
 ## Distribution
