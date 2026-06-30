@@ -50,6 +50,17 @@ The app checks GitHub Releases on startup via `electron-updater`. For that to de
 
 If you bump the version and only upload the installer without its `.yml`, existing installs won't see the update.
 
+## Versioning
+
+`MAJOR.MINOR.PATCH`, trailing zero segments dropped in anything user-facing:
+
+- **Major** release: `1.0`, `2.0`, `3.0`, ...
+- **Significant update**: `1.1`, `1.2`, ...
+- **Bug-fix only**: third segment, e.g. `1.0.1`, `1.0.2`, ... `1.0.156`.
+- **Beta**: always the literal word "beta" plus a number, naming the release it's leading up to — `2.2 beta 1`, `2.2 beta 2`, ... so a beta is never confused with a maintenance/patch release that happens to share a number.
+
+`package.json`'s `version` field still has to be strict semver for npm/electron-builder/electron-updater (3 numeric segments, optional `-beta.N` suffix) — e.g. `2.2.0`, `2.2.0-beta.1`, `1.0.1`. `formatVersion()` in `src/version.js` converts that internal string to the friendly display form above; it's what the in-app Settings popover and GitHub release titles use. Git tags and `package.json` stay semver as-is — only what's *shown to users* (Settings, release titles) follows the friendly format.
+
 ## Project structure
 
 ```

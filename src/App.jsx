@@ -6,6 +6,7 @@ import Preview from './Preview.jsx';
 import TemplateGallery from './TemplateGallery.jsx';
 import { improveWithAI } from './ai.js';
 import { version as appVersion } from '../package.json';
+import { formatVersion } from './version.js';
 
 const STORAGE_KEY = 'resume-builder:resume';
 const SNAPSHOTS_KEY = 'resume-builder:snapshots';
@@ -169,7 +170,7 @@ export default function App() {
                   <button className="popover-close" onClick={() => setShowSettings(false)}>×</button>
                 </div>
                 <p className="popover-hint">Changes autosave automatically to this device.</p>
-                <p className="popover-hint">OpenResume Builder v{appVersion}</p>
+                <p className="popover-hint">OpenResume Builder v{formatVersion(appVersion)}</p>
                 <button className="popover-action" disabled={updateChecking} onClick={checkForUpdates}>
                   {updateChecking ? 'Checking…' : 'Check for Updates'}
                 </button>
