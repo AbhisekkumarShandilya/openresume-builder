@@ -168,6 +168,32 @@ body, html, #root { margin: 0; height: 100%; overflow-x: hidden; font-family: sy
   position: absolute; top: 8px; left: 8px; color: #9ca3af; font-size: 13px; pointer-events: none;
 }
 .editor .row { display: flex; gap: 8px; }
+.editor .month-year-field { position: relative; flex: 1; }
+.editor .month-year-field input { width: 100%; padding-right: 26px; }
+.editor .month-year-toggle {
+  position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+  width: 22px; height: 22px; padding: 0; font-size: 12px; line-height: 1;
+  background: transparent;
+}
+.editor .month-year-toggle:hover { background: #e5e7eb; }
+.editor .month-year-popover {
+  position: absolute; top: 38px; left: 0; z-index: 50; width: 200px;
+  background: #111827; color: #fff; border-radius: 8px; padding: 10px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #374151;
+}
+.editor .month-year-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; font-weight: 600; }
+.editor .month-year-nav button { width: 24px; height: 24px; padding: 0; background: #374151; }
+.editor .month-year-nav button:hover:not(:disabled) { background: #4b5563; }
+.editor .month-year-nav button:disabled { opacity: 0.3; cursor: default; }
+.editor .month-year-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 8px; }
+.editor .month-year-grid button { padding: 4px 0; font-size: 12px; background: #374151; }
+.editor .month-year-grid button:hover:not(:disabled) { background: #4b5563; }
+.editor .month-year-grid button.active { background: #2563eb; }
+.editor .month-year-grid button:disabled { opacity: 0.3; cursor: not-allowed; }
+.editor .month-year-actions { display: flex; gap: 6px; }
+.editor .month-year-actions button { flex: 1; font-size: 11px; padding: 4px; background: #374151; }
+.editor .month-year-actions button.danger { background: #7f1d1d; }
+.editor .month-year-actions button.danger:hover { background: #991b1b; }
 .editor .card { background: #fff; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e5e7eb; }
 .editor button { cursor: pointer; border: 0; border-radius: 6px; padding: 4px 10px; background: #2563eb; color: #fff; }
 .editor button.danger { background: #ef4444; margin-top: 6px; }

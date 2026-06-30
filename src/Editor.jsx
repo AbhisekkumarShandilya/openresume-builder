@@ -4,6 +4,7 @@ import { JOB_TITLE_SUGGESTIONS, DEGREE_SUGGESTIONS } from './autocompleteData.js
 import { BULLET_STYLE_GROUPS, normalizeBulletStyle } from './bulletStyles.js';
 import RichBulletField, { buildLineElement, lineElementToMarkerText, getLineElement } from './RichBulletField.jsx';
 import { detectWrap, applyLineToggle, toggleLinesBullet } from './textEditing.js';
+import MonthYearField from './MonthYearField.jsx';
 
 export default function Editor({ resume, setResume, activeSection }) {
   // Functional setResume(prev => ...) everywhere below, NOT setResume({...resume, ...}).
@@ -404,16 +405,27 @@ export default function Editor({ resume, setResume, activeSection }) {
           {SECTION_TYPES[section.type].fields.map((f, fi) =>
             f.row ? (
               <div className="row" key={fi}>
-                {f.row.map((rf) => (
-                  <input
-                    key={rf.key}
-                    spellCheck={rf.spellCheck}
-                    list={rf.list}
-                    placeholder={rf.placeholder}
-                    value={x[rf.key]}
-                    onChange={(e) => updateItem(section.id, x.id, rf.key, e.target.value)}
-                  />
-                ))}
+                {f.row.map((rf) =>
+                  rf.monthYear ? (
+                    <MonthYearField
+                      key={rf.key}
+                      placeholder={rf.placeholder}
+                      allowPresent={rf.allowPresent}
+                      spellCheck={rf.spellCheck}
+                      value={x[rf.key]}
+                      onChange={(v) => updateItem(section.id, x.id, rf.key, v)}
+                    />
+                  ) : (
+                    <input
+                      key={rf.key}
+                      spellCheck={rf.spellCheck}
+                      list={rf.list}
+                      placeholder={rf.placeholder}
+                      value={x[rf.key]}
+                      onChange={(e) => updateItem(section.id, x.id, rf.key, e.target.value)}
+                    />
+                  )
+                )}
               </div>
             ) : (
               <input

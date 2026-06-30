@@ -19,8 +19,8 @@ export const SECTION_TYPES = {
         { key: 'location', placeholder: 'City, ST', spellCheck: true },
       ] },
       { row: [
-        { key: 'start', placeholder: 'Start', spellCheck: false },
-        { key: 'end', placeholder: 'End', spellCheck: false },
+        { key: 'start', placeholder: 'Start', spellCheck: false, monthYear: true },
+        { key: 'end', placeholder: 'End', spellCheck: false, monthYear: true, allowPresent: true },
       ] },
     ],
     bullets: { placeholder: 'One bullet per line (Ctrl+]/Ctrl+[ to indent a sub-bullet)', richText: true },
@@ -35,8 +35,8 @@ export const SECTION_TYPES = {
         { key: 'location', placeholder: 'City, ST', spellCheck: true },
       ] },
       { row: [
-        { key: 'start', placeholder: 'Start', spellCheck: false },
-        { key: 'end', placeholder: 'End', spellCheck: false },
+        { key: 'start', placeholder: 'Start', spellCheck: false, monthYear: true },
+        { key: 'end', placeholder: 'End', spellCheck: false, monthYear: true, allowPresent: true },
       ] },
     ],
     bullets: { placeholder: 'One bullet per line (optional; Ctrl+]/Ctrl+[ to indent a sub-bullet)' },
@@ -51,8 +51,8 @@ export const SECTION_TYPES = {
         { key: 'link', placeholder: 'Link (optional)', spellCheck: false },
       ] },
       { row: [
-        { key: 'start', placeholder: 'Start', spellCheck: false },
-        { key: 'end', placeholder: 'End', spellCheck: false },
+        { key: 'start', placeholder: 'Start', spellCheck: false, monthYear: true },
+        { key: 'end', placeholder: 'End', spellCheck: false, monthYear: true, allowPresent: true },
       ] },
     ],
     bullets: { placeholder: 'One bullet per line (Ctrl+]/Ctrl+[ to indent a sub-bullet)' },
