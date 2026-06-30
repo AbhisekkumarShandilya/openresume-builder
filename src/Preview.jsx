@@ -93,7 +93,7 @@ function ResumaticSection({ section }) {
             <div className="r-entry" key={x.id}>
               <div className="r-entry-head">
                 <strong>{x.school}</strong>
-                <span>{x.end}</span>
+                <span>{x.start} – {x.end}</span>
               </div>
               <div className="r-entry-sub">
                 <em>{x.degree}</em>
