@@ -11,6 +11,12 @@ Ordered by priority for a solo, free, open-source workflow. Parked items
 4. [ ] Dark mode — CSS-variable pass over `styles.css`
 5. [ ] Dedicated languages/links fields — `SECTION_TYPES` in `src/data.js` makes new sections nearly declarative
 
+## Versioning plan
+
+- Stay on 2.x for now — upcoming features (undo/redo, DOCX/TXT export, dark mode) are additive, so they ship as 2.3, 2.4, … with beta-N prereleases as usual
+- [ ] Reserve v3.0 for the milestone that changes the data model / how the app is used: named resume profiles + JSON Resume import/export + backup/restore landing together
+- Don't burn the major number on a feature release; it's the "something big changed" signal (and winget/auto-updater don't care about the number)
+
 ## Also planned
 
 - [ ] Page-break handling in PDF export — avoid slicing a bullet/heading at the page boundary (`break-inside: avoid` pass + a page-boundary indicator in the preview)
