@@ -5,12 +5,11 @@ Ordered by priority for a solo, free, open-source workflow. Parked items
 
 ## Next up (in order)
 
-1. [ ] Wire `npm test` + `npm run test:e2e` into CI so they gate every push (Windows build + lint CI exists; mac/Linux build CI exists)
-2. [ ] Undo/redo for edits — the resume is one JSON object, so a past/future stack around `setResume` covers most of it (snapshots stay as the coarse-grained fallback)
-3. [ ] Export to DOCX and plain text, not just PDF — job portals demand .docx; `docx` npm package in the renderer, TXT nearly free once a serializer exists
-4. [ ] Multiple saved resumes / named profile switching — tailoring per job is the core workflow; snapshots already prove the storage pattern
-5. [ ] Dark mode — CSS-variable pass over `styles.css`
-6. [ ] Dedicated languages/links fields — `SECTION_TYPES` in `src/data.js` makes new sections nearly declarative
+1. [ ] Undo/redo for edits — the resume is one JSON object, so a past/future stack around `setResume` covers most of it (snapshots stay as the coarse-grained fallback)
+2. [ ] Export to DOCX and plain text, not just PDF — job portals demand .docx; `docx` npm package in the renderer, TXT nearly free once a serializer exists
+3. [ ] Multiple saved resumes / named profile switching — tailoring per job is the core workflow; snapshots already prove the storage pattern
+4. [ ] Dark mode — CSS-variable pass over `styles.css`
+5. [ ] Dedicated languages/links fields — `SECTION_TYPES` in `src/data.js` makes new sections nearly declarative
 
 ## Also planned
 
@@ -36,6 +35,7 @@ Ordered by priority for a solo, free, open-source workflow. Parked items
 - [x] Build and publish the Linux AppImage via GitHub Actions ubuntu-latest runner
 - [x] Verify the Linux AppImage actually runs correctly on a real Linux machine — tested on WSL2 (Ubuntu 26.04, real Linux kernel) via WSLg, full UI renders and works correctly. Needs these system libs on a fresh box (not bundled in the AppImage): `libfuse2t64` (FUSE, required to mount any AppImage), `libnss3`, `libnspr4`, `libatk1.0-0t64`, `libatk-bridge2.0-0t64`, `libcups2t64`, `libdrm2`, `libxkbcommon0`, `libxcomposite1`, `libxdamage1`, `libxfixes3`, `libxrandr2`, `libgbm1`, `libpango-1.0-0`, `libasound2t64`, `libgtk-3-0t64`
 - [x] Automated tests — Vitest unit tests for pure logic (format/bulletStyles/data/textEditing/RichBulletField helpers) plus a Playwright e2e smoke suite (`e2e/smoke.mjs`) driving the real Electron app
+- [x] Tests gate every push and every release — CI runs lint + unit + e2e on all branch pushes, and the three release build workflows call the CI suite (`workflow_call`) as a required job, so a broken tag never uploads installers
 - [x] Winget manifest submitted: https://github.com/microsoft/winget-pkgs/pull/391215
 
 ## Parked (needs hardware or outsized effort)
