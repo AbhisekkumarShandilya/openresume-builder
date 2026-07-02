@@ -5,10 +5,7 @@ Ordered by priority for a solo, free, open-source workflow. Parked items
 
 ## Next up (in order)
 
-1. [ ] Export to DOCX and plain text, not just PDF — job portals demand .docx; `docx` npm package in the renderer, TXT nearly free once a serializer exists
-2. [ ] Multiple saved resumes / named profile switching — tailoring per job is the core workflow; snapshots already prove the storage pattern
-3. [ ] Dark mode — CSS-variable pass over `styles.css`
-4. [ ] Dedicated languages/links fields — `SECTION_TYPES` in `src/data.js` makes new sections nearly declarative
+_All the recent additive features are shipped — the next queue items are under "Also planned" below (Page-break handling in PDF export is the natural next pick)._
 
 ## Versioning plan
 
@@ -42,7 +39,11 @@ Ordered by priority for a solo, free, open-source workflow. Parked items
 - [x] Automated tests — Vitest unit tests for pure logic (format/bulletStyles/data/textEditing/RichBulletField helpers) plus a Playwright e2e smoke suite (`e2e/smoke.mjs`) driving the real Electron app
 - [x] Tests gate every push and every release — CI runs lint + unit + e2e on all branch pushes, and the three release build workflows call the CI suite (`workflow_call`) as a required job, so a broken tag never uploads installers
 - [x] Undo/redo for edits — past/future history around the resume state (`src/history.js` + `useHistory` hook), Ctrl+Z/Ctrl+Y/Ctrl+Shift+Z plus ↶/↷ toolbar buttons; rapid edits within 600ms coalesce into one undo step so undo rewinds a typing burst, not a keystroke
+- [x] Export to DOCX and plain text, not just PDF — Export ▾ dropdown offers PDF / Word (.docx) / plain text (.txt). Shared `docx` package in the renderer; markup maps to real bold/italic runs and the bullet & numbering picker maps to real Word numbering definitions (not literal "•"). One format-agnostic export model (`src/exportModel.js`) feeds both the DOCX (`src/docxExport.js`) and TXT (`src/textExport.js`) serializers so they stay in step with the preview. Consistent `{Name} — Resume.ext` filename; remembers last export dir within the session
 - [x] Winget manifest submitted: https://github.com/microsoft/winget-pkgs/pull/391215
+- [x] Multiple saved resumes / named profile switching — profiles index (`resume-builder:profiles`) + one body key + one snapshots key per profile (`src/profiles.js`); idempotent, verify-before-delete migration off the legacy single-resume key; toolbar switcher with New / Duplicate ("Copy of X") / Rename / Delete (drops an insurance snapshot); undo stack + snapshots + autosave are per-profile and switching clears the undo stack. Migration and CRUD unit-tested (`src/profiles.test.js`) and the full flow verified in the real Electron app. Ships behind the scenes on 2.x; the v3.0 milestone (with JSON Resume import/export + backup/restore) is when it's *released*
+- [x] Dark mode — full CSS-variable tokenization of `styles.css` (`:root` light defaults + one `[data-theme="dark"]` override); three-way System / Light / Dark setting (`src/theme.js`, app-level in localStorage under `resume-builder:theme`, defaults to System via `prefers-color-scheme` and re-applies on OS change) picked in the Settings popover; `nativeTheme.themeSource` set in main over a `set-theme` IPC so Electron chrome follows; index.html applies the saved theme before first paint (no white flash); the resume preview stays paper-white and is reframed via `--paper-shadow` on the dark backdrop. Scrollbars/focus rings/popovers/inputs/disabled states/the "saved" indicator all themed; `src/theme.test.js` unit tests + a dark-mode e2e block verify it in the real app. Also the tokenization groundwork for the "improve visual design" item
+- [x] Dedicated languages/links fields — two new declarative `SECTION_TYPES` (`src/data.js`). Languages: `{ language, proficiency }` with proficiency free-text + autocomplete (Native/Fluent/Professional/Conversational/Basic + CEFR A1–C2), rendered compactly inline (`English (Native) · German (B2)`). Links: `{ label, url }` — the label shows and the URL is a real clickable anchor in the preview/PDF and a `docx` `ExternalHyperlink` in Word; TXT prints `Label: url`. Light validation only (`src/contactFields.js` prepends `https://` when a scheme is missing and shows a non-blocking "doesn't look like a URL" hint). Both addable/reorderable and render in all three templates. Placement decision: shipped as a reorderable **body section** (the header already carries `website`), keeping the uniform section model. Pure helpers unit-tested (`src/contactFields.test.js`) + export tests + an e2e block; DOCX hyperlink relationships verified by unzip
 
 ## Parked (needs hardware or outsized effort)
 

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu, nativeTheme } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('node:path');
 const fs = require('node:fs/promises');
@@ -73,6 +73,17 @@ ipcMain.handle('check-for-updates', () => {
     autoUpdater.once('error', onError);
     autoUpdater.checkForUpdates().catch((err) => { cleanup(); resolve({ ok: false, reason: 'error', message: err.message, version }); });
   });
+});
+
+// Mirror the renderer's appearance setting onto Electron's native chrome
+// (menus, dialogs, native scrollbars). themeSource accepts exactly these
+// three values; anything else is ignored so a bad message can't wedge it.
+ipcMain.handle('set-theme', (_e, setting) => {
+  if (['system', 'light', 'dark'].includes(setting)) {
+    nativeTheme.themeSource = setting;
+    return { ok: true };
+  }
+  return { ok: false };
 });
 
 function createWindow() {
@@ -177,11 +188,19 @@ ipcMain.handle('load-resume', async () => {
   return { ok: true, data: JSON.parse(raw) };
 });
 
+// Remembers the directory of the last successful export/save within the
+// running session, so a second export defaults next to the first instead of
+// wherever the OS last dropped the user.
+let lastExportDir = '';
+function defaultExportPath(name) {
+  return lastExportDir ? path.join(lastExportDir, name) : name;
+}
+
 // Export the rendered preview to PDF
-ipcMain.handle('export-pdf', async () => {
+ipcMain.handle('export-pdf', async (_e, defaultName) => {
   const { filePath, canceled } = await dialog.showSaveDialog(win, {
     title: 'Export PDF',
-    defaultPath: 'resume.pdf',
+    defaultPath: defaultExportPath(defaultName || 'resume.pdf'),
     filters: [{ name: 'PDF', extensions: ['pdf'] }],
   });
   if (canceled || !filePath) return { ok: false };
@@ -191,6 +210,34 @@ ipcMain.handle('export-pdf', async () => {
     margins: { top: 0, bottom: 0, left: 0, right: 0 },
   });
   await fs.writeFile(filePath, pdf);
+  lastExportDir = path.dirname(filePath);
+  return { ok: true, filePath };
+});
+
+// Export to Word (.docx). The renderer builds the document and hands over a
+// base64 string; we just pick a location and write the decoded bytes.
+ipcMain.handle('export-docx', async (_e, { base64, defaultName }) => {
+  const { filePath, canceled } = await dialog.showSaveDialog(win, {
+    title: 'Export Word Document',
+    defaultPath: defaultExportPath(defaultName || 'resume.docx'),
+    filters: [{ name: 'Word Document', extensions: ['docx'] }],
+  });
+  if (canceled || !filePath) return { ok: false };
+  await fs.writeFile(filePath, Buffer.from(base64, 'base64'));
+  lastExportDir = path.dirname(filePath);
+  return { ok: true, filePath };
+});
+
+// Export to plain text (.txt).
+ipcMain.handle('export-text', async (_e, { text, defaultName }) => {
+  const { filePath, canceled } = await dialog.showSaveDialog(win, {
+    title: 'Export Plain Text',
+    defaultPath: defaultExportPath(defaultName || 'resume.txt'),
+    filters: [{ name: 'Plain Text', extensions: ['txt'] }],
+  });
+  if (canceled || !filePath) return { ok: false };
+  await fs.writeFile(filePath, text, 'utf-8');
+  lastExportDir = path.dirname(filePath);
   return { ok: true, filePath };
 });
 

@@ -4,6 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OpenResume Builder</title>
+    <!-- Apply the saved theme before the app's CSS/JS loads so a dark-mode
+         user never sees a white first-paint flash. Mirrors resolveTheme() in
+         src/theme.js; App.jsx re-applies and keeps it in sync afterward. -->
+    <style>
+      html { background: #f3f4f6; }
+      html[data-theme="dark"] { background: #0d1117; }
+    </style>
+    <script>
+      (function () {
+        try {
+          var s = localStorage.getItem('resume-builder:theme');
+          if (['system', 'light', 'dark'].indexOf(s) === -1) s = 'system';
+          var dark = s === 'dark'
+            || (s === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+        } catch (e) { /* no storage → default light applies */ }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

@@ -68,6 +68,29 @@ export const SECTION_TYPES = {
       ] },
     ],
   },
+  languages: {
+    label: 'Languages',
+    // Rendered compactly inline (English (Native) · German (B2)) rather than
+    // one card-height row per language — see Preview/exportModel.
+    newItem: () => ({ id: nextId(), language: '', proficiency: '' }),
+    fields: [
+      { row: [
+        { key: 'language', placeholder: 'Language', spellCheck: false },
+        { key: 'proficiency', placeholder: 'Proficiency', spellCheck: false, list: 'proficiency-suggestions' },
+      ] },
+    ],
+  },
+  links: {
+    label: 'Links',
+    // The label is shown; the url becomes a real clickable hyperlink in the
+    // preview/PDF/DOCX and prints as the bare URL in TXT. Light validation only
+    // (a scheme is prepended if missing) — see src/contactFields.js.
+    newItem: () => ({ id: nextId(), label: '', url: '' }),
+    fields: [
+      { key: 'label', placeholder: 'Label (e.g. GitHub, LinkedIn, Portfolio)', spellCheck: false },
+      { key: 'url', placeholder: 'URL (github.com/you)', spellCheck: false, validateUrl: true },
+    ],
+  },
   skills: {
     label: 'Skills',
     newItem: null, // items is a flat array of skill strings, edited via ChipInput

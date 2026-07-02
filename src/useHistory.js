@@ -32,11 +32,20 @@ export default function useHistory(initialValue) {
     setHistory(redoHistory);
   }, []);
 
+  // Replace the document and wipe the undo/redo history — used when switching
+  // profiles, so each document gets a fresh editing session and Ctrl+Z can't
+  // rewind into a different profile's edits.
+  const reset = useCallback((value) => {
+    lastEditAt.current = 0;
+    setHistory(createHistory(typeof value === 'function' ? value() : value));
+  }, []);
+
   return {
     value: history.present,
     set,
     undo,
     redo,
+    reset,
     canUndo: history.past.length > 0,
     canRedo: history.future.length > 0,
   };

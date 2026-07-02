@@ -11,6 +11,13 @@ export const JOB_TITLE_SUGGESTIONS = [
   'Marketing Manager', 'Sales Manager', 'Account Manager', 'Customer Success Manager', 'Intern',
 ];
 
+// Language proficiency: the common word scale plus the CEFR levels that
+// European applications expect. Free-text, so anything else works too.
+export const PROFICIENCY_SUGGESTIONS = [
+  'Native', 'Fluent', 'Professional', 'Conversational', 'Basic',
+  'C2', 'C1', 'B2', 'B1', 'A2', 'A1',
+];
+
 export const DEGREE_SUGGESTIONS = [
   'BSc Computer Science', 'BSc Software Engineering', 'BSc Information Technology',
   'BSc Data Science', 'BA Business Administration', 'BEng Electrical Engineering',

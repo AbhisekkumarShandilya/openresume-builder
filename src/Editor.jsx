@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { SECTION_TYPES } from './data.js';
-import { JOB_TITLE_SUGGESTIONS, DEGREE_SUGGESTIONS } from './autocompleteData.js';
+import { JOB_TITLE_SUGGESTIONS, DEGREE_SUGGESTIONS, PROFICIENCY_SUGGESTIONS } from './autocompleteData.js';
+import { isLikelyValidUrl } from './contactFields.js';
 import { BULLET_STYLE_GROUPS, normalizeBulletStyle } from './bulletStyles.js';
 import RichBulletField, { buildLineElement, lineElementToMarkerText, getLineElement } from './RichBulletField.jsx';
 import { detectWrap, applyLineToggle, toggleLinesBullet } from './textEditing.js';
@@ -353,6 +354,9 @@ export default function Editor({ resume, setResume, activeSection }) {
       <datalist id="degree-suggestions">
         {DEGREE_SUGGESTIONS.map((d) => <option key={d} value={d} />)}
       </datalist>
+      <datalist id="proficiency-suggestions">
+        {PROFICIENCY_SUGGESTIONS.map((p) => <option key={p} value={p} />)}
+      </datalist>
 
       {section.type === 'skills' && (
         <div className="skills-list">
@@ -425,6 +429,20 @@ export default function Editor({ resume, setResume, activeSection }) {
                       onChange={(e) => updateItem(section.id, x.id, rf.key, e.target.value)}
                     />
                   )
+                )}
+              </div>
+            ) : f.validateUrl ? (
+              <div className="field-with-warning" key={f.key}>
+                <input
+                  spellCheck={f.spellCheck}
+                  placeholder={f.placeholder}
+                  value={x[f.key]}
+                  onChange={(e) => updateItem(section.id, x.id, f.key, e.target.value)}
+                />
+                {(x[f.key] || '').trim() && !isLikelyValidUrl(x[f.key]) && (
+                  <span className="field-warning">
+                    This doesn't look like a URL — it'll still be exported as typed.
+                  </span>
                 )}
               </div>
             ) : (
