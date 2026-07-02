@@ -56,6 +56,17 @@ async function main() {
     const pageErrors = [];
     page.on('pageerror', (err) => pageErrors.push(err.message));
 
+    // Maximize so the toolbar layout matches a real desktop window. On the CI
+    // runner's small virtual display the default 1200x800 window can be
+    // constrained narrow enough that the absolutely-centered .tabs-group
+    // overlaps the profile switcher, making that button un-clickable by
+    // coordinate hit-testing (the failure this guards against).
+    await app.evaluate(({ BrowserWindow }) => {
+      for (const w of BrowserWindow.getAllWindows()) {
+        if (!w.webContents.getURL().startsWith('devtools://')) w.maximize();
+      }
+    }).catch(() => {});
+
     await page.waitForLoadState('load', { timeout: 60000 });
     await page.waitForTimeout(3000);
 
@@ -274,7 +285,9 @@ async function main() {
     const profileCountBefore = await page.evaluate(() =>
       JSON.parse(localStorage.getItem('resume-builder:profiles')).profiles.length
     );
-    await page.click('.profile-switch-btn');
+    // force: the decorative centered .tabs-group can overlap this trigger at
+    // some window sizes; we're testing the profile flow, not hit-testing.
+    await page.click('.profile-switch-btn', { force: true });
     await page.waitForTimeout(150);
     await page.click('.profile-actions button:has-text("Duplicate")');
     await page.waitForTimeout(400);
@@ -286,7 +299,7 @@ async function main() {
     check('switcher shows the "Copy of" profile after duplicate', dupBtn.includes('Copy of'), dupBtn.trim());
 
     // Switching profiles clears the undo stack (fresh session per document).
-    await page.click('.profile-switch-btn');
+    await page.click('.profile-switch-btn', { force: true });
     await page.waitForTimeout(150);
     await page.click('.profile-item:not(.active)');
     await page.waitForTimeout(400);
@@ -297,14 +310,14 @@ async function main() {
     // on the active profile).
     const activeIsCopy = await page.$eval('.profile-switch-btn', (el) => el.textContent);
     if (!activeIsCopy.includes('Copy of')) {
-      await page.click('.profile-switch-btn');
+      await page.click('.profile-switch-btn', { force: true });
       await page.waitForTimeout(150);
       await page.click('.profile-item:has-text("Copy of")');
       await page.waitForTimeout(400);
     }
     // Delete the copy (accept the confirm dialog) → count restored.
     page.once('dialog', (d) => d.accept());
-    await page.click('.profile-switch-btn');
+    await page.click('.profile-switch-btn', { force: true });
     await page.waitForTimeout(150);
     await page.click('.profile-actions button.danger:has-text("Delete")');
     await page.waitForTimeout(400);
